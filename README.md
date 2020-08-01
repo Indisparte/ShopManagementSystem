@@ -10,7 +10,7 @@ A simple Java application for the management of a clothing store with the functi
 #### Update Versione 2.6.3:
 
 * Correction about DAO classes:
-	* Add an abstract supercalsse with CRUD functions and create a singleton class for the database.
+	* Add an abstract superclass with CRUD (**C**reate **R**ead **U**pdate **D**elete) functions and create a singleton class for the database.
 
 ********
 ## Index
