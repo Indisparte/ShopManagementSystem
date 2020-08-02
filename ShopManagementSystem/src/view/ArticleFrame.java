@@ -15,6 +15,7 @@ import model.Modello;
 
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.sql.Connection;
 import java.util.ArrayList;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -30,6 +31,8 @@ import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.postgresql.util.PSQLException;
 
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -61,7 +64,7 @@ public class ArticleFrame extends JFrame {
 	 * 							i messaggi d'errore.																			                                 */
 	private JTextField txtEan, txtColor, txtPrice;
 	private String size ="Sizes", ean = " ", descrizione = " ", colore = " ", fornitore = " ", collezione = " ", id = " ", IDModello= " ";
-	private int giacenza;
+	private int giacenza, verifica;
 	private double price = 00.00;
 	private JTextPane txtpnDescription ;
 	private JLabel lblPrice ,lblColor,lblDescription,lblArticle,lblVariety,lblModel, lblEan, lblContatoreCaratteri, lblEanError, lblErrorColor,
@@ -118,6 +121,7 @@ public class ArticleFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
 
 		//																	Panel principali
 		panelModel = new JPanel();
@@ -327,7 +331,8 @@ public class ArticleFrame extends JFrame {
 	lblLockOpen.addMouseListener(new MouseAdapter() {
 	 	@Override
 	 	public void mouseClicked(MouseEvent e) {
-	 		lockModelPanel(true, M);		 		
+			verifica = JOptionPane.showConfirmDialog(null,"Hai aggiunto un capo con entrambi i panel sbloccati?", "Attenzione",JOptionPane.YES_NO_OPTION);
+	 		lockModelPanel(true, M, verifica);		 		
 	 	}
 	 });
 	lblLockOpen.setToolTipText("<html>Blocco contenuti pannello<br/>per aggiungere variet\u00E0 al medesimo capo</html>\"");
@@ -343,7 +348,8 @@ public class ArticleFrame extends JFrame {
 	lblLockClose.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			lockModelPanel(false, M);
+			verifica = JOptionPane.showConfirmDialog(null,"Hai aggiunto un capo con entrambi i panel sbloccati?", "Attenzione",JOptionPane.YES_NO_OPTION);
+			lockModelPanel(false, M,verifica);
 		}
 	});
 	lblLockClose.setIcon(new ImageIcon(ArticleFrame.class.getResource("/img/lock-alt-regular-24.png")));
@@ -803,11 +809,10 @@ public class ArticleFrame extends JFrame {
 	 * <p><b>true</b> se si vuole bloccare il pannello<br/>
 	 * <b>false</b> se si vuole sbloccare il pannello</p>
 	 */
-	private void lockModelPanel(boolean choose, Modello m) {
+	private void lockModelPanel(boolean choose, Modello m, int verifica) {
 		if(choose) {
-			if(JOptionPane.showConfirmDialog(null,"Hai aggiunto un capo con entrambi i panel sbloccati?", "Attenzione",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			if(verifica == JOptionPane.YES_OPTION) {
 			lblLockOpen.setVisible(false);
-			
 			panelModel.setBackground(new Color(44, 46, 60));
 			comboBoxCollections.setEnabled(false);
 			
@@ -922,7 +927,7 @@ public class ArticleFrame extends JFrame {
 			txtpnDescription.setText(m.getDescrizione());
 			adattaFoto(m.getImg());
 			lblLockClose.setEnabled(false);
-			lockModelPanel(true, m);
+			lockModelPanel(true, m,0);
 			IDModello = m.getIDModello();
 			
 			
